@@ -1,37 +1,24 @@
-# importação principal
-from flask import Flask, redirect, url_for
+from flask import Flask, request
 
-# Definindo o App
-app = Flask(__name__)
+# Trabalhando com arquivos estáticos e métodos HTTP
+app = Flask(__name__, static_folder="static")
 
-# Criando uma rota... há duas maneiras de fazer isso: Decorator ou Por Função
 @app.route("/")
 def index():
-    return "Uma rota 'Index' inicial do Flask."
+    return "App started."
 
-# Criando redirecionamento de rotas
-@app.route("/admin/")
-def adminUser():
-    return "<h3>Admin User!</h3>"
-
-@app.route("/guest/")
-@app.route("/guest/<name_user>")
-def guest(name_user="No name"):
-    return "<p>Guest user %s</p>" % name_user
-
-@app.route("/user/")
-@app.route("/user/<login>")
-def admin(login=""):
-    if login == "admin":
-        return redirect(url_for('adminUser'))
+# Principais métodos
+# GET, POST, PUT, PATCH, DELETE
+@app.route("/add", methods=["GET", "POST"])
+def add():
+    metodo = ""
+    if request.method == "GET":
+        metodo = "GET"
+    elif request.method == "POST":
+        metodo = "POST"
     else:
-        return redirect(url_for('guest', name_user=login))
+        metodo = "NO METHOD"
+    return "Método Add {}".format(metodo)
 
-@app.route("/site")
-def siteGoogle():
-    return redirect("https://google.com")
-
-# Verifica se a aplicação que está sendo executada é a principal
-if __name__ == '__main__':
-    app.run()
-
+if __name__ == "__main__":
+    app.run(debug=True)
